@@ -5,8 +5,8 @@ C++ / wxWidgets application for visualizing
 chemical element reactions with animation.
 
 ## Team
-- [Твоё имя]
-- [Имя партнёра]
+- Nataliia
+- Anh
 
 ## Idea
 User selects two chemical elements and the number 
