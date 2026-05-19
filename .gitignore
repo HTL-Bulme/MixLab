@@ -37,5 +37,21 @@
 *.out
 *.app
 
+# CMake and build system (minimal)
+build/
+CMakeFiles/
+mixlab
+
+# CMake and build system (extended)
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+CTestTestfile.cmake
+DartConfiguration.tcl
+Testing/
+
 # debug information files
 *.dwo
+
+.vscode/
