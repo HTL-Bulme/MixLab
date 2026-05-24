@@ -5,13 +5,16 @@
 
 namespace mixlab {
 
-class AtomCanvas; // Forward declaration
+class AtomCanvas; // forward declaration
 
 class AtomFrame : public wxFrame {
 public:
     AtomFrame(const wxString& title);
 private:
     AtomCanvas* canvas_ = nullptr;
+    wxSlider* speedSlider_;
+    wxSlider* partSlider_;
+    bool dunkelModus_ = true;
 };
 
 } // namespace mixlab
