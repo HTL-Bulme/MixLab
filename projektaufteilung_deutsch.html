@@ -1,0 +1,70 @@
+
+<style>
+.wrap { padding:12px; font-family:sans-serif; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+.card { background:#f8f8f8; border-radius:10px; border:1px solid #ddd; overflow:hidden; }
+.ch { padding:10px 14px; font-size:13px; font-weight:500; color:#222; display:flex; align-items:center; gap:8px; border-bottom:1px solid #eee; }
+.sec { padding:7px 14px 2px; font-size:10px; font-weight:500; color:#888; text-transform:uppercase; letter-spacing:.4px; display:flex; align-items:center; gap:6px; }
+.sec-bar { height:3px; border-radius:2px; flex:1; }
+.task { display:flex; align-items:flex-start; gap:8px; padding:5px 14px; }
+.tf { font-size:11px; font-family:monospace; color:#3498db; width:130px; flex-shrink:0; padding-top:1px; }
+.td { font-size:12px; color:#555; line-height:1.5; flex:1; }
+.divider { height:1px; background:#eee; margin:4px 0; }
+.foot { display:flex; align-items:center; gap:10px; padding:8px 14px; border-top:1px solid #eee; }
+.bar-wrap { flex:1; height:6px; background:#eee; border-radius:3px; overflow:hidden; }
+.bar { height:100%; border-radius:3px; }
+.tnum { font-size:12px; font-weight:500; white-space:nowrap; }
+.total-box { background:#f8f8f8; border-radius:10px; border:1px solid #ddd; padding:10px 14px; margin-bottom:10px; }
+.trow { display:flex; align-items:center; gap:10px; padding:4px 0; }
+.trow-label { font-size:12px; color:#555; width:160px; flex-shrink:0; }
+.trow-bar { flex:1; height:8px; background:#eee; border-radius:4px; overflow:hidden; }
+.trow-fill { height:100%; border-radius:4px; }
+.trow-num { font-size:11px; font-weight:500; white-space:nowrap; min-width:100px; text-align:right; }
+</style>
+
+<div class="wrap">
+  <div class="grid">
+
+    <div class="card">
+      <div class="ch">
+        <span style="width:10px;height:10px;border-radius:50%;background:#3498db;flex-shrink:0"></span>
+        Teilnehmer 1
+      </div>
+
+      <div class="sec"><span style="color:var(--color-text-info);">Logik</span><div class="sec-bar" style="background:var(--color-background-info);"></div></div>
+      <div class="task"><span class="tf">logik.h</span><span class="td">Strukturen <code>Element</code>, <code>Molekuel</code></span></div>
+      <div class="task"><span class="tf">daten.cpp</span><span class="td">Konstante <code>ELEMENTE</code> — alle 8 Elemente</span></div>
+      <div class="task"><span class="tf">logik.cpp</span><span class="td">Funktionen <code>ggt()</code> und <code>optimalesVerhaeltnis()</code></span></div>
+      <div class="task"><span class="tf">test_logik.cpp</span><span class="td">Tests: <code>test_ggt</code>, <code>test_verhaeltnis</code>, <code>test_suche</code></span></div>
+
+      <div class="divider"></div>
+      <div class="sec"><span style="color:#3498db;">Benutzeroberfläche</span><div class="sec-bar" style="background:#3498db;opacity:.3;"></div></div>
+      <div class="task"><span class="tf">gui_sidebar.cpp</span><span class="td">Seitenleiste: Elementliste, Reaktionsverlauf</span></div>
+      <div class="task"><span class="tf">gui_result.cpp</span><span class="td">Ergebniszeile: Formel, Statusbadge, Hinweis</span></div>
+      <div class="task"><span class="tf">anim_effekte.cpp</span><span class="td">Alle Effekte: Blasen, Funken, Pulsieren, Orbits</span></div>
+      <div class="task"><span class="tf">gui_menue.cpp</span><span class="td">Menüleiste + alle Dialoge (Hilfe, Valenz, Über...)</span></div>
+      <div class="task"><span class="tf">README.md</span><span class="td">Projektbeschreibung, Kompilieranleitung + LICENSE</span></div>
+    </div>
+
+    <div class="card">
+      <div class="ch">
+        <span style="width:10px;height:10px;border-radius:50%;background:#2ecc71;flex-shrink:0"></span>
+        Teilnehmer 2
+      </div>
+
+      <div class="sec"><span style="color:var(--color-text-success);">Logik</span><div class="sec-bar" style="background:var(--color-background-success);"></div></div>
+      <div class="task"><span class="tf">logik.h</span><span class="td">Strukturen <code>Teilchen</code>, <code>Effekt</code></span></div>
+      <div class="task"><span class="tf">daten.cpp</span><span class="td">Konstante <code>MOLEKUELE</code> — alle 17 Moleküle</span></div>
+      <div class="task"><span class="tf">logik.cpp</span><span class="td">Funktionen <code>molekuelSchluessel()</code>, <code>sucheMolekuel()</code></span></div>
+      <div class="task"><span class="tf">test_logik.cpp</span><span class="td">Tests: <code>test_schluessel</code>, <code>test_datenbank</code></span></div>
+
+      <div class="divider"></div>
+      <div class="sec"><span style="color:#2ecc71;">Benutzeroberfläche</span><div class="sec-bar" style="background:#2ecc71;opacity:.3;"></div></div>
+      <div class="task"><span class="tf">app.cpp</span><span class="td">wxApp + Hauptfenster: Hauptfenster, Layout</span></div>
+      <div class="task"><span class="tf">gui_toolbar.cpp</span><span class="td">Werkzeugleiste: Schieberegler, Designwechsel</span></div>
+      <div class="task"><span class="tf">gui_auswahl.cpp</span><span class="td">Elementauswahl: Buttons, SpinCtrl, Mischen, Reset</span></div>
+      <div class="task"><span class="tf">anim_panel.cpp</span><span class="td">AnimationsPanel: wxTimer, OnPaint, Teilchen zeichnen</span></div>
+      <div class="task"><span class="tf">CMakeLists.txt</span><span class="td">Build-Datei: wxWidgets + Programm + Tests</span></div>
+    </div>
+  </div>
+</div>
