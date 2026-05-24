@@ -21,15 +21,8 @@ AtomFrame::AtomFrame(const wxString& title)
 
   speedSlider_ = new wxSlider(toolbar, wxID_ANY, 3, 1, 5,
       wxDefaultPosition, wxSize(90, -1));
-  tbSizer->Add(speedSlider_, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
+  tbSizer->Add(speedSlider_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
   
-  tbSizer->Add(new wxStaticText(toolbar, wxID_ANY,
-      wxT("Teilchen:")), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 4);
-
-  partSlider_ = new wxSlider(toolbar, wxID_ANY, 6, 3, 12,
-      wxDefaultPosition, wxSize(80, -1));
-  tbSizer->Add(partSlider_, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
-
   wxButton* themeBtn = new wxButton(toolbar, wxID_ANY,
       wxT("Tag/Nacht"), wxDefaultPosition, wxSize(80, -1));
   tbSizer->Add(themeBtn, 0, wxALIGN_CENTER_VERTICAL);

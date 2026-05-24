@@ -3,8 +3,18 @@
 
 #include <wx/wx.h>
 #include <wx/panel.h>
+#include <wx/timer.h>
+#include <vector>
 
 namespace mixlab {
+
+struct Teilchen {
+    float x, y;
+    float vx, vy;
+    float radius;
+    wxColour farbe;
+    wxString symbol;
+};
 
 class AtomCanvas : public wxPanel {
 public:
@@ -15,10 +25,16 @@ public:
 
 private:
     void OnPaint(wxPaintEvent& event);
-    wxDECLARE_EVENT_TABLE();
+    void OnTimer(wxTimerEvent& event);
 
+    wxTimer* timer_;
     bool dunkelModus_ = true;
     int geschwindigkeit_ = 3;
+
+    std::vector<Teilchen> teilchen_;
+    float globalZeit_ = 0;
+    
+    wxDECLARE_EVENT_TABLE();
 };
 
 } // namespace mixlab

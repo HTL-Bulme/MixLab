@@ -13,7 +13,6 @@ public:
 private:
     AtomCanvas* canvas_ = nullptr;
     wxSlider* speedSlider_;
-    wxSlider* partSlider_;
     bool dunkelModus_ = true;
 };
 
