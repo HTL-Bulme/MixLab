@@ -44,6 +44,7 @@ mixlab
 
 # CMake and build system (extended)
 CMakeCache.txt
+CmakeListe.txt
 cmake_install.cmake
 Makefile
 compile_commands.json
@@ -55,3 +56,4 @@ Testing/
 *.dwo
 
 .vscode/
+# *.html
