@@ -9,10 +9,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(CTest)
 
 # --- wxWidgets ---
-find_package(wxWidgets REQUIRED COMPONENTS net core base)
-if(wxWidgets_USE_FILE) # not defined in CONFIG mode
-    include(${wxWidgets_USE_FILE})
-endif()
+find_package(wxWidgets REQUIRED COMPONENTS core base)
+include(${wxWidgets_USE_FILE})
 
 set(APP_SRCS
   atom_app.cpp
@@ -23,8 +21,7 @@ set(APP_SRCS
 )
 
 add_executable(${PROJECT_NAME} ${APP_SRCS})
-target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${wxWidgets_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${wxWidgets_DEFINITIONS})
-
 # --- Tests (optional, if you use Catch2) ---
