@@ -18,6 +18,7 @@ set(APP_SRCS
   atom_frame.cpp
   atom_mixer.cpp
   molecule_data.cpp
+  reaction.cpp
 )
 
 add_executable(${PROJECT_NAME} ${APP_SRCS})
