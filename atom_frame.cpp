@@ -12,7 +12,7 @@ AtomFrame::AtomFrame(const wxString& title)
   // Sidebar layout
   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
-  // Header layout
+  // Toolbar layout
   wxPanel* toolbar = new wxPanel(this);
   wxBoxSizer* tbSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -30,7 +30,7 @@ AtomFrame::AtomFrame(const wxString& title)
   toolbar->SetSizer(tbSizer);
   mainSizer->Add(toolbar, 0, wxEXPAND | wxGROW | wxALL, 6);
 
-  // Hauptfeld mit Animation
+  // Main field with animation
   canvas_ = new AtomCanvas(this);
   mainSizer->Add(canvas_, 1, wxEXPAND);
 
