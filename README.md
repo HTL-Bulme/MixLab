@@ -35,8 +35,8 @@ MixLab/
 ├── atom_canvas.hpp
 ├── atom_canvas.cpp
 │
-├── reaction_api.hpp
-├── fallback_reaction.cpp
+├── reaction.hpp
+├── reaction.cpp
 ├── ui_state.hpp
 ├── reaction_controller.cpp
 │
@@ -54,8 +54,7 @@ MixLab/
 ├── gui_dialogs.hpp
 ├── gui_dialogs.cpp
 │
-├── test_logic.cpp
-└── project_division.html
+└── test_logic.cpp
 ```
 
 ## Balanced 50/50 Project Division
@@ -69,10 +68,10 @@ Participant 1 works on the runnable application core.
 
 ### Logic tasks
 
-- `reaction_api.hpp`  
+- `reaction.hpp`  
   Shared interface between the user interface and the reaction logic.
 
-- `fallback_reaction.cpp`  
+- `reaction.cpp`  
   Small demo/fallback reaction logic for early testing.
 
 - `ui_state.hpp`  
