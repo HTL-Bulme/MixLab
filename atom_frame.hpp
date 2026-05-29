@@ -1,6 +1,7 @@
 #ifndef ATOM_FRAME_HPP
 #define ATOM_FRAME_HPP
 #include "reaction.hpp"
+#include "gui_sidebar.hpp"
 
 #include <wx/wx.h>
 
@@ -14,6 +15,7 @@ public:
 
 private:
     AtomCanvas* canvas_ = nullptr;
+    GuiSidebar* sidebar_ = nullptr;
 
     wxSlider* speedSlider_;
     bool dunkelModus_ = true;
