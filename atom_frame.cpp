@@ -1,6 +1,7 @@
 #include "atom_frame.hpp"
 #include "atom_canvas.hpp"
 #include "reaction.hpp"
+#include "gui_sidebar.hpp"
 
 #include <wx/wx.h>
 
@@ -33,13 +34,14 @@ AtomFrame::AtomFrame(const wxString& title)
   // Sidebar layout
   wxBoxSizer* contentSizer = new wxBoxSizer(wxHORIZONTAL);
 
-  wxPanel* sidebarPanel = new wxPanel(this);
-  sidebarPanel->SetBackgroundColour(wxColour(60, 60, 60));
-  sidebarPanel->SetMinSize(wxSize(160, -1));
+  // wxPanel* sidebarPanel = new wxPanel(this);
+  sidebar_ = new GuiSidebar(this);
+  // sidebarPanel->SetBackgroundColour(wxColour(60, 60, 60));
+  sidebar_->SetMinSize(wxSize(160, -1));
 
   wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
 
-  contentSizer->Add(sidebarPanel, 0, wxEXPAND);
+  contentSizer->Add(sidebar_, 0, wxEXPAND);
   contentSizer->Add(rightSizer, 1, wxEXPAND);
   
   mainSizer->Add(contentSizer, 1, wxEXPAND | wxGROW | wxALL, 6);
@@ -63,7 +65,8 @@ AtomFrame::AtomFrame(const wxString& title)
   // Events
   themeBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
     dunkelModus_ = !dunkelModus_;
-    canvas_->setDunkelModus(dunkelModus_); 
+    canvas_->setDunkelModus(dunkelModus_);
+    sidebar_->setDarkMode(dunkelModus_); 
   });
 
   speedSlider_->Bind(wxEVT_SLIDER, [this](wxCommandEvent&) {
@@ -81,6 +84,7 @@ AtomFrame::AtomFrame(const wxString& title)
 
   ReactionResult result = calculateReaction(currentInput_);
   updateReactionResult(result);
+  sidebar_->addHistoryEntry(result.formula, result.name);
 
 }
 
