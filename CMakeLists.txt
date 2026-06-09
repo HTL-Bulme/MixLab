@@ -17,6 +17,7 @@ set(APP_SRCS
   atom_canvas.cpp
   atom_frame.cpp
   atom_mixer.cpp
+  reaction_controller.cpp
   molecule_data.cpp
   reaction.cpp
   gui_sidebar.cpp
