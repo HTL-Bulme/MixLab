@@ -45,8 +45,9 @@ void GuiSidebar::buildLayout() {
     SetSizer(sizer);
 }
 
-void GuiSidebar::onElementSelected(wxCommandEvent& /*event*/) {
+void GuiSidebar::onElementSelected(wxCommandEvent& event) {
     // Parent frame can bind to this panel's list directly if needed
+    event.Skip();
 }
 
 std::string GuiSidebar::getSelectedElement() const {

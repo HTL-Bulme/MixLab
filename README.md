@@ -77,7 +77,7 @@ Participant 1 works on the runnable application core.
 - `ui_state.hpp`  
   Stores selected elements, atom counts, speed, theme mode and current result.
 
-- `reaction_controller.cpp`  
+- `reaction_controller.cpp` / `reaction_controller.hpp`  
   Connects button clicks and user input with reaction calculation and result display.
 
 ### Interface tasks
