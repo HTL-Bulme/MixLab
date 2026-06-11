@@ -1,6 +1,5 @@
 #include "atom_frame.hpp"
 #include "atom_canvas.hpp"
-#include "reaction.hpp"
 #include "gui_sidebar.hpp"
 
 #include <wx/wx.h>
@@ -53,32 +52,28 @@ AtomFrame::AtomFrame(const wxString& title)
 
   mainSizer->Add(contentSizer, 1, wxEXPAND | wxGROW | wxALL, 6);
 
-  // Input state defaults
-  reactionController_.setElement1("H");
-  reactionController_.setCount1(2);
-  reactionController_.setElement2("O");
-  reactionController_.setCount2(1);
-  hasFirstSelection_ = true;
-  hasSecondSelection_ = true;
-
     wxBoxSizer* selectionRow = new wxBoxSizer(wxHORIZONTAL);
     selectionText_ = new wxStaticText(this, wxID_ANY, "Auswahl:");
     selectionRow->Add(selectionText_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
 
-    element1Text_ = new wxStaticText(this, wxID_ANY, wxT("H:"));
+    element1Text_ = new wxStaticText(this, wxID_ANY, wxT("-:"));
     selectionRow->Add(element1Text_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
     count1_ = new wxSpinCtrl(this, wxID_ANY, wxEmptyString,
-      wxDefaultPosition, wxSize(64, -1), wxSP_ARROW_KEYS, 1, 4, 2);
+      wxDefaultPosition, wxSize(64, -1), wxSP_ARROW_KEYS, 0, 4, 0);
     selectionRow->Add(count1_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
 
     selectionRow->Add(new wxStaticText(this, wxID_ANY, "+"),
       0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
 
-    element2Text_ = new wxStaticText(this, wxID_ANY, wxT("O:"));
+    element2Text_ = new wxStaticText(this, wxID_ANY, wxT("-:"));
     selectionRow->Add(element2Text_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
     count2_ = new wxSpinCtrl(this, wxID_ANY, wxEmptyString,
-      wxDefaultPosition, wxSize(64, -1), wxSP_ARROW_KEYS, 1, 4, 1);
+      wxDefaultPosition, wxSize(64, -1), wxSP_ARROW_KEYS, 0, 4, 0);
     selectionRow->Add(count2_, 0, wxALIGN_CENTER_VERTICAL);
+
+    // Keep internal reaction state in sync with visible default counters.
+    reactionController_.setCount1(count1_->GetValue());
+    reactionController_.setCount2(count2_->GetValue());
 
     rightSizer->Add(selectionRow, 0, wxALL, 8);
   updateSelectionText();
@@ -106,6 +101,12 @@ AtomFrame::AtomFrame(const wxString& title)
 
   // Main field with animation
   canvas_ = new AtomCanvas(this);
+  canvas_->setAtoms(
+    uiState_.input.element1,
+    uiState_.input.count1,
+    uiState_.input.element2,
+    uiState_.input.count2
+  );
   rightSizer->Add(canvas_, 1, wxEXPAND);
 
   // Result row
@@ -120,20 +121,22 @@ AtomFrame::AtomFrame(const wxString& title)
   rightSizer->Add(resultStatusText_, 0, wxALL, 5);
   rightSizer->Add(resultHintText_, 0, wxALL, 5);
 
-  const ReactionResult& result = reactionController_.recompute();
-  updateReactionResult(result);
-  sidebar_->addHistoryEntry(result.formula, result.name);
-
 }
 
 void AtomFrame::updateSelectionText() {
   if(!selectionText_) return;
 
   if (element1Text_) {
-    element1Text_->SetLabel(wxString::FromUTF8(uiState_.input.element1 + ":"));
+    const wxString label1 = uiState_.input.element1.empty()
+      ? wxString("-:")
+      : wxString::FromUTF8(uiState_.input.element1 + ":");
+    element1Text_->SetLabel(label1);
   }
   if (element2Text_) {
-    element2Text_->SetLabel(wxString::FromUTF8(uiState_.input.element2 + ":"));
+    const wxString label2 = uiState_.input.element2.empty()
+      ? wxString("-:")
+      : wxString::FromUTF8(uiState_.input.element2 + ":");
+    element2Text_->SetLabel(label2);
   }
 
   selectionText_->SetLabel("Auswahl:");
@@ -149,6 +152,10 @@ void AtomFrame::updateReactionResult(const ReactionResult& result) {
   resultStatusText_->SetLabel("Status: " + result.statusText);
   resultHintText_->SetLabel("Hinweis: " + result.hint);
 
+  if (canvas_) {
+    canvas_->setReactionStatus(result.status, result.statusText);
+  }
+
     Layout();
 }
 
@@ -158,14 +165,34 @@ void AtomFrame::applySidebarSelection() {
 
   if (!hasFirstSelection_ || hasSecondSelection_) {
     reactionController_.setElement1(element);
+    if (uiState_.input.count1 <= 0) {
+      reactionController_.setCount1(1);
+      if (count1_) {
+        count1_->SetValue(1);
+      }
+    }
     hasFirstSelection_ = true;
     hasSecondSelection_ = false;
   } else {
     reactionController_.setElement2(element);
+    if (uiState_.input.count2 <= 0) {
+      reactionController_.setCount2(1);
+      if (count2_) {
+        count2_->SetValue(1);
+      }
+    }
     hasSecondSelection_ = true;
   }
 
   updateSelectionText();
+  if (canvas_) {
+    canvas_->setAtoms(
+      uiState_.input.element1,
+      uiState_.input.count1,
+      uiState_.input.element2,
+      uiState_.input.count2
+    );
+  }
 
   const ReactionResult& result = reactionController_.recompute();
   updateReactionResult(result);
@@ -178,6 +205,14 @@ void AtomFrame::applyAtomCounts() {
   reactionController_.setCount1(count1_->GetValue());
   reactionController_.setCount2(count2_->GetValue());
   updateSelectionText();
+  if (canvas_) {
+    canvas_->setAtoms(
+      uiState_.input.element1,
+      uiState_.input.count1,
+      uiState_.input.element2,
+      uiState_.input.count2
+    );
+  }
 
   const ReactionResult& result = reactionController_.recompute();
   updateReactionResult(result);
