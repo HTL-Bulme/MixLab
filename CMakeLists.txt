@@ -27,4 +27,10 @@ add_executable(${PROJECT_NAME} ${APP_SRCS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${wxWidgets_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${wxWidgets_DEFINITIONS})
-# --- Tests (optional, if you use Catch2) ---
+
+add_executable(test_atom_mixer
+  tests/test_atom_mixer.cpp
+  reaction.cpp
+)
+target_include_directories(test_atom_mixer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_test(NAME test_atom_mixer COMMAND test_atom_mixer)
