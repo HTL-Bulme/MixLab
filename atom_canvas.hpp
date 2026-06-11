@@ -15,6 +15,8 @@ public:
 
     void setDunkelModus(bool dunkel);
     void setGeschwindigkeit(int wert);
+    void setAnimationPaused(bool paused);
+    bool isAnimationPaused() const;
     void setAtoms(const std::string& symbol1, int count1,
                   const std::string& symbol2, int count2);
     void setReactionStatus(ReactionStatus status, const std::string& statusText);
@@ -36,6 +38,7 @@ private:
     int approachFrames_ = 120;
     ReactionStatus reactionStatus_ = ReactionStatus::Unknown;
     wxString reactionStatusText_ = wxT("Unbekannt");
+    bool animationPaused_ = false;
 
     float globalZeit_ = 0;
     

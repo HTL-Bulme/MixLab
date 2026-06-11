@@ -54,6 +54,10 @@ AtomCanvas::AtomCanvas(wxWindow* parent)
 }
 
 void AtomCanvas::OnTimer(wxTimerEvent&) {
+    if (animationPaused_) {
+        return;
+    }
+
     const bool hasAtoms = !symbol1_.IsEmpty() && !symbol2_.IsEmpty() && count1_ > 0 && count2_ > 0;
     if (!hasAtoms) {
         reactionPhase_ = false;
@@ -199,7 +203,17 @@ void AtomCanvas::setDunkelModus(bool dunkel) {
 }
 
 void AtomCanvas::setGeschwindigkeit(int wert) {
-    geschwindigkeit_ = wert;
+    geschwindigkeit_ = std::max(1, wert);
+    approachFrames_ = std::max(45, 140 - geschwindigkeit_ * 20);
+}
+
+void AtomCanvas::setAnimationPaused(bool paused) {
+    animationPaused_ = paused;
+    Refresh();
+}
+
+bool AtomCanvas::isAnimationPaused() const {
+    return animationPaused_;
 }
 
 void AtomCanvas::setAtoms(const std::string& symbol1, int count1,

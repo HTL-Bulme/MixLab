@@ -26,10 +26,14 @@ AtomFrame::AtomFrame(const wxString& title)
       wxDefaultPosition, wxSize(150, -1));
   speedGroup->Add(speedSlider_, 0, wxALIGN_CENTER_VERTICAL);
 
+    pauseBtn_ = new wxButton(toolbar, wxID_ANY,
+      wxT("Pause"), wxDefaultPosition, wxSize(88, -1));
+
   wxButton* themeBtn = new wxButton(toolbar, wxID_ANY,
       wxT("Tag/Nacht"), wxDefaultPosition, wxSize(96, -1));
 
   tbSizer->Add(speedGroup, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 10);
+  tbSizer->Add(pauseBtn_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
   tbSizer->AddStretchSpacer(1);
   tbSizer->Add(themeBtn, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 10);
 
@@ -92,10 +96,23 @@ AtomFrame::AtomFrame(const wxString& title)
     canvas_->setGeschwindigkeit(uiState_.speed);
   });
 
+  pauseBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+    toggleAnimationPause();
+  });
+
+  Bind(wxEVT_CHAR_HOOK, [this](wxKeyEvent& event) {
+    const int key = event.GetKeyCode();
+    if (key == WXK_SPACE || key == 'P' || key == 'p') {
+      toggleAnimationPause();
+      return;
+    }
+    event.Skip();
+  });
+
   count1_->Bind(wxEVT_SPINCTRL, [this](wxCommandEvent&) {
     applyAtomCounts();
   });
-  count2_->Bind(wxEVT_SPINCTRL, [this](wxCommandEvent&) {
+  count2_->Bind(wxEVT_SPINCTRL, [this](wxCommandEvent&) { 
     applyAtomCounts();
   });
 
@@ -121,6 +138,16 @@ AtomFrame::AtomFrame(const wxString& title)
   rightSizer->Add(resultStatusText_, 0, wxALL, 5);
   rightSizer->Add(resultHintText_, 0, wxALL, 5);
 
+}
+
+void AtomFrame::toggleAnimationPause() {
+  animationPaused_ = !animationPaused_;
+  if (canvas_) {
+    canvas_->setAnimationPaused(animationPaused_);
+  }
+  if (pauseBtn_) {
+    pauseBtn_->SetLabel(animationPaused_ ? wxT("Resume") : wxT("Pause"));
+  }
 }
 
 void AtomFrame::updateSelectionText() {

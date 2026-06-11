@@ -20,6 +20,7 @@ private:
     GuiSidebar* sidebar_ = nullptr;
 
     wxSlider* speedSlider_ = nullptr;
+    wxButton* pauseBtn_ = nullptr;
     wxSpinCtrl* count1_ = nullptr;
     wxSpinCtrl* count2_ = nullptr;
     wxStaticText* element1Text_ = nullptr;
@@ -35,9 +36,11 @@ private:
     wxStaticText* resultStatusText_ = nullptr;
     wxStaticText* resultHintText_ = nullptr;
     void updateReactionResult(const ReactionResult& result);
+    void toggleAnimationPause();
 
     bool hasFirstSelection_ = false;
     bool hasSecondSelection_ = false;
+    bool animationPaused_ = false;
     void applySidebarSelection();
     void applyAtomCounts();
 };
