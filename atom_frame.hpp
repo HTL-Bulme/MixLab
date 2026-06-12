@@ -5,7 +5,6 @@
 #include "gui_sidebar.hpp"
 
 #include <wx/wx.h>
-#include <wx/spinctrl.h>
 
 namespace mixlab {
 
@@ -19,12 +18,20 @@ private:
     AtomCanvas* canvas_ = nullptr;
     GuiSidebar* sidebar_ = nullptr;
 
+    wxPanel*      toolbar_    = nullptr;
+    wxButton*     themeBtn_   = nullptr;
+    wxStaticText* speedLabel_ = nullptr;
     wxSlider* speedSlider_ = nullptr;
     wxButton* pauseBtn_ = nullptr;
-    wxSpinCtrl* count1_ = nullptr;
-    wxSpinCtrl* count2_ = nullptr;
+    wxButton* count1MinusBtn_ = nullptr;
+    wxStaticText* count1ValueText_ = nullptr;
+    wxButton* count1PlusBtn_ = nullptr;
+    wxButton* count2MinusBtn_ = nullptr;
+    wxStaticText* count2ValueText_ = nullptr;
+    wxButton* count2PlusBtn_ = nullptr;
     wxStaticText* element1Text_ = nullptr;
     wxStaticText* element2Text_ = nullptr;
+    wxStaticText* plusLabel_    = nullptr;
     UiState uiState_;
     ReactionController reactionController_;
 
@@ -36,7 +43,11 @@ private:
     wxStaticText* resultStatusText_ = nullptr;
     wxStaticText* resultHintText_ = nullptr;
     void updateReactionResult(const ReactionResult& result);
+    void applyTheme();
     void toggleAnimationPause();
+    void adjustCount1(int delta);
+    void adjustCount2(int delta);
+    void updateCountTexts();
 
     bool hasFirstSelection_ = false;
     bool hasSecondSelection_ = false;

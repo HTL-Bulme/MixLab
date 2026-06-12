@@ -91,7 +91,7 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
     int H = GetSize().GetHeight();
 
     dc.SetBackground(wxBrush(
-        dunkelModus_ ? wxColour(13,17,23) : wxColour(240,244,248)
+        dunkelModus_ ? wxColour(13,17,23) : wxColour(255,255,255)
     ));
     dc.Clear();
 
