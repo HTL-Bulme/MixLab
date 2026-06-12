@@ -220,20 +220,18 @@ AtomFrame::AtomFrame(const wxString& title)
     reactionController_.toggleDarkMode();
     canvas_->setDunkelModus(uiState_.darkMode);
     sidebar_->setDarkMode(uiState_.darkMode);
+    applyTheme();
   }, mixlab::ID_Menu_ToggleTheme);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) {
     hasFirstSelection_ = false;
     hasSecondSelection_ = false;
     reactionController_.setElement1("");
     reactionController_.setElement2("");
-    reactionController_.setCount1(1);
-    reactionController_.setCount2(1);
-    if (count1_) count1_->SetValue(1);
-    if (count2_) count2_->SetValue(1);
+    reactionController_.setCount1(0);
+    reactionController_.setCount2(0);
+    updateCountTexts();
     updateSelectionText();
-    if (canvas_) {
-      canvas_->setAtoms("", 0, "", 0);
-    }
+    updateCanvasAtoms(canvas_, uiState_);
     updateReactionResult(reactionController_.recompute());
   }, mixlab::ID_Menu_Reset);
 
