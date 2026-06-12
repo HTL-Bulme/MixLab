@@ -2,10 +2,27 @@
 
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace mixlab {
 
 namespace {
+
+struct ElementStub {
+    const char* symbol;
+    const char* displayName;
+};
+
+const std::vector<ElementStub> kElementStubs = {
+    {"H", "Hydrogen"},
+    {"O", "Oxygen"},
+    {"Na", "Sodium"},
+    {"Cl", "Chlorine"},
+    {"Fe", "Iron"},
+    {"C", "Carbon"},
+    {"N", "Nitrogen"},
+    {"S", "Sulfur"},
+};
 
 std::string makeFormulaPart(const std::string& symbol, int count) {
     if (count <= 1) {
@@ -51,6 +68,16 @@ ReactionResult makeResult(std::string formula,
 }
 
 } // namespace
+
+std::string getElementDisplayName(const std::string& symbol) {
+    for (const auto& e : kElementStubs) {
+        if (symbol == e.symbol) {
+            return e.displayName;
+        }
+    }
+
+    return symbol.empty() ? std::string("Element") : symbol;
+}
 
 ReactionResult calculateReaction(const ReactionInput& input) {
     if (input.count1 <= 0 || input.count2 <= 0) {

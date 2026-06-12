@@ -29,6 +29,10 @@ struct ReactionResult {
     bool known = false;
 };
 
+// Demo metadata provider for UI while no full element database is connected.
+// Kept in reaction module to avoid duplicating element stubs in UI files.
+std::string getElementDisplayName(const std::string& symbol);
+
 // Gemeinsame Schnittstelle zwischen Anwendung und Reaktionsmodul.
 // Die einfache Implementierung in reaction.cpp dient nur zur Demonstration
 // und zum Testen des Anwendungskerns.
