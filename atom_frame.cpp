@@ -1,6 +1,8 @@
 #include "atom_frame.hpp"
 #include "atom_canvas.hpp"
 #include "gui_sidebar.hpp"
+#include "gui_menu.hpp"
+#include "gui_dialogs.hpp"
 
 #include <wx/wx.h>
 #include <algorithm>
@@ -68,6 +70,10 @@ AtomFrame::AtomFrame(const wxString& title)
   : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(900, 620)),
     reactionController_(uiState_) {
   SetMinSize(wxSize(800, 560));
+
+  // Create and set menu bar
+  wxMenuBar* menuBar = createMenuBar();
+  SetMenuBar(menuBar);
 
   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -194,6 +200,42 @@ AtomFrame::AtomFrame(const wxString& title)
   count1PlusBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { adjustCount1(+1); });
   count2MinusBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { adjustCount2(-1); });
   count2PlusBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { adjustCount2(+1); });
+
+  // Menu event handlers for dialogs and actions
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showAboutDialog(); }, mixlab::ID_Menu_About);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showHelpDialog(); }, mixlab::ID_Menu_Help);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showValenceDialog(); }, mixlab::ID_Menu_Valence);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showElementTableDialog(); }, mixlab::ID_Menu_ElementTable);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showAllReactionsDialog(); }, mixlab::ID_Menu_AllReactions);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showDangerousReactionsDialog(); }, mixlab::ID_Menu_DangerousReactions);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSafeReactionsDialog(); }, mixlab::ID_Menu_SafeReactions);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSettingsDialog(); }, mixlab::ID_Menu_Settings);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { 
+    wxMessageBox(wxT("Sprachumschaltung nicht implementiert"), wxT("Info"), wxICON_INFORMATION | wxOK);
+  }, mixlab::ID_Menu_Language);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSaveReactionDialog(); }, mixlab::ID_Menu_SaveReaction);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSavedReactionsDialog(); }, mixlab::ID_Menu_OpenSaved);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showExportDialog(); }, mixlab::ID_Menu_ExportText);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) {
+    reactionController_.toggleDarkMode();
+    canvas_->setDunkelModus(uiState_.darkMode);
+    sidebar_->setDarkMode(uiState_.darkMode);
+  }, mixlab::ID_Menu_ToggleTheme);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) {
+    hasFirstSelection_ = false;
+    hasSecondSelection_ = false;
+    reactionController_.setElement1("");
+    reactionController_.setElement2("");
+    reactionController_.setCount1(1);
+    reactionController_.setCount2(1);
+    if (count1_) count1_->SetValue(1);
+    if (count2_) count2_->SetValue(1);
+    updateSelectionText();
+    if (canvas_) {
+      canvas_->setAtoms("", 0, "", 0);
+    }
+    updateReactionResult(reactionController_.recompute());
+  }, mixlab::ID_Menu_Reset);
 
   // Main field with animation
   canvas_ = new AtomCanvas(this);

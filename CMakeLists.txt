@@ -17,10 +17,14 @@ set(APP_SRCS
   atom_canvas.cpp
   atom_frame.cpp
   atom_mixer.cpp
+  reaction_adapter.cpp
   reaction_controller.cpp
   molecule_data.cpp
   reaction.cpp
   gui_sidebar.cpp
+  gui_menu.cpp
+  gui_dialogs.cpp
+  reaction_history.cpp
 )
 
 add_executable(${PROJECT_NAME} ${APP_SRCS})

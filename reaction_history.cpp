@@ -1,14 +1,20 @@
 #include "reaction_history.hpp"
-#include <wx/wx.h>
+
 namespace mixlab {
+
+ReactionHistory::ReactionHistory(size_t maxSize)
+    : maxSize_(maxSize) {
+}
+
 void ReactionHistory::addReaction(const std::string& reaction) {
-    reactions.push_back(reaction);
-    if (reactions.size() > maxSize) {
-        reactions.erase(reactions.begin());
+    reactions_.push_back(reaction);
+    if (reactions_.size() > maxSize_) {
+        reactions_.erase(reactions_.begin());
     }
-}  
+}
+
 const std::vector<std::string>& ReactionHistory::getReactions() const {
-    return reactions;
+    return reactions_;
 }
 
 } // namespace mixlab
