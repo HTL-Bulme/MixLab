@@ -13,8 +13,8 @@ class AtomCanvas : public wxPanel {
 public:
     AtomCanvas(wxWindow* parent);
 
-    void setDunkelModus(bool dunkel);
-    void setGeschwindigkeit(int wert);
+    void setDarkMode(bool dark);
+    void setSpeed(int value);
     void setAnimationPaused(bool paused);
     bool isAnimationPaused() const;
     void setAtoms(const std::string& symbol1, int count1,
@@ -27,8 +27,8 @@ private:
     wxString makeReactionFormula() const;
 
     wxTimer* timer_;
-    bool dunkelModus_ = true;
-    int geschwindigkeit_ = 3;
+    bool darkMode_ = true;
+    int speed_ = 3;
     wxString symbol1_;
     wxString symbol2_;
     int count1_ = 0;
@@ -37,10 +37,10 @@ private:
     int phaseFrame_ = 0;
     int approachFrames_ = 120;
     ReactionStatus reactionStatus_ = ReactionStatus::Unknown;
-    wxString reactionStatusText_ = wxT("Unbekannt");
+    wxString reactionStatusText_ = wxT("");
     bool animationPaused_ = false;
 
-    float globalZeit_ = 0;
+    float globalTime_ = 0;
     
     wxDECLARE_EVENT_TABLE();
 };

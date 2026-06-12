@@ -33,11 +33,10 @@ struct ReactionResult {
 // Kept in reaction module to avoid duplicating element stubs in UI files.
 std::string getElementDisplayName(const std::string& symbol);
 
-// Gemeinsame Schnittstelle zwischen Anwendung und Reaktionsmodul.
-// Die einfache Implementierung in reaction.cpp dient nur zur Demonstration
-// und zum Testen des Anwendungskerns.
-// Die vollstaendige chemische Logik kann spaeter ueber dieselbe Funktion
-// angeschlossen werden.
+// Shared interface between the application and the reaction module.
+// The simple implementation in reaction.cpp is only used for demonstration
+// and for testing the application core.
+// The full chemical logic can be connected later through the same function.
 ReactionResult calculateReaction(const ReactionInput& input);
 
 } // namespace mixlab

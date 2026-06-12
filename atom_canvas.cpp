@@ -50,7 +50,7 @@ AtomCanvas::AtomCanvas(wxWindow* parent)
     SetBackgroundStyle(wxBG_STYLE_PAINT);
 
     timer_ = new wxTimer(this);
-    timer_->Start(16); // 16мс = ~60 FPS
+    timer_->Start(16); // 16 ms = ~60 FPS
 }
 
 void AtomCanvas::OnTimer(wxTimerEvent&) {
@@ -62,7 +62,7 @@ void AtomCanvas::OnTimer(wxTimerEvent&) {
     if (!hasAtoms) {
         reactionPhase_ = false;
         phaseFrame_ = 0;
-        globalZeit_ = 0.0f;
+        globalTime_ = 0.0f;
         Refresh();
         return;
     }
@@ -72,11 +72,11 @@ void AtomCanvas::OnTimer(wxTimerEvent&) {
         if (phaseFrame_ > 90) {
             reactionPhase_ = false;
             phaseFrame_ = 0;
-            globalZeit_ = 0.0f;
+            globalTime_ = 0.0f;
         }
     } else {
-        globalZeit_ += 1.0f;
-        if (globalZeit_ >= static_cast<float>(approachFrames_)) {
+        globalTime_ += 1.0f;
+        if (globalTime_ >= static_cast<float>(approachFrames_)) {
             reactionPhase_ = true;
             phaseFrame_ = 0;
         }
@@ -91,13 +91,13 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
     int H = GetSize().GetHeight();
 
     dc.SetBackground(wxBrush(
-        dunkelModus_ ? wxColour(13,17,23) : wxColour(255,255,255)
+        darkMode_ ? wxColour(13,17,23) : wxColour(255,255,255)
     ));
     dc.Clear();
 
-    // Netz
+    // Grid
     dc.SetPen(wxPen(
-        dunkelModus_ ? wxColour(255,255,255,15) : wxColour(0,0,0,20), 1
+        darkMode_ ? wxColour(255,255,255,15) : wxColour(0,0,0,20), 1
     ));
     for (int x = 0; x < W; x += 28) dc.DrawLine(x, 0, x, H);
     for (int y = 0; y < H; y += 28) dc.DrawLine(0, y, W, y);
@@ -113,7 +113,7 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
     const float hf = static_cast<float>(H);
     const float radiusf = static_cast<float>(radius);
     const float spacingf = static_cast<float>(spacing);
-    const float progress = std::clamp(globalZeit_ / static_cast<float>(approachFrames_), 0.0f, 1.0f);
+    const float progress = std::clamp(globalTime_ / static_cast<float>(approachFrames_), 0.0f, 1.0f);
     const float leftBase = -40.0f + ((wf * 0.5f - 70.0f) + 40.0f) * progress;
     const float rightBase = (wf + 40.0f) + ((wf * 0.5f + 70.0f) - (wf + 40.0f)) * progress;
 
@@ -159,7 +159,7 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
     const float reactionRadiusf = static_cast<float>(reactionRadius);
     const float pulse = reactionRadiusf + std::sin(static_cast<float>(phaseFrame_) * 0.22f) * 3.0f;
 
-    const StatusStyle style = styleForStatus(reactionStatus_, dunkelModus_);
+    const StatusStyle style = styleForStatus(reactionStatus_, darkMode_);
 
     dc.SetPen(*wxTRANSPARENT_PEN);
     dc.SetBrush(wxBrush(style.glow));
@@ -176,7 +176,7 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
     dc.DrawCircle(W / 2, H / 2, static_cast<int>(pulse));
 
     const wxString formula = makeReactionFormula();
-    dc.SetTextForeground(dunkelModus_ ? wxColour(245, 250, 255) : wxColour(20, 32, 48));
+    dc.SetTextForeground(darkMode_ ? wxColour(245, 250, 255) : wxColour(20, 32, 48));
     wxFont formulaFont(18, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
     dc.SetFont(formulaFont);
     int fw = 0;
@@ -189,7 +189,7 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
     dc.SetTextForeground(style.label);
     wxString caption = wxT("Status: ") + reactionStatusText_;
     if (reactionStatusText_.IsEmpty()) {
-        caption = wxT("Status: Unbekannt");
+        caption = wxT("Status: Unknown");
     }
     int cw = 0;
     int ch = 0;
@@ -197,14 +197,14 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
     dc.DrawText(caption, W / 2 - cw / 2, H / 2 + fh / 2 + 6);
 }
 
-void AtomCanvas::setDunkelModus(bool dunkel) {
-    dunkelModus_ = dunkel;
+void AtomCanvas::setDarkMode(bool dark) {
+    darkMode_ = dark;
     Refresh();
 }
 
-void AtomCanvas::setGeschwindigkeit(int wert) {
-    geschwindigkeit_ = std::max(1, wert);
-    approachFrames_ = std::max(45, 140 - geschwindigkeit_ * 20);
+void AtomCanvas::setSpeed(int value) {
+    speed_ = std::max(1, value);
+    approachFrames_ = std::max(45, 140 - speed_ * 20);
 }
 
 void AtomCanvas::setAnimationPaused(bool paused) {
@@ -232,9 +232,9 @@ void AtomCanvas::setAtoms(const std::string& symbol1, int count1,
 
     reactionPhase_ = false;
     phaseFrame_ = 0;
-    globalZeit_ = 0.0f;
+    globalTime_ = 0.0f;
 
-    const int speed = std::max(1, geschwindigkeit_);
+    const int speed = std::max(1, speed_);
     approachFrames_ = std::max(45, 140 - speed * 20);
 
     Refresh();
@@ -248,7 +248,7 @@ void AtomCanvas::setReactionStatus(ReactionStatus status, const std::string& sta
     reactionStatus_ = status;
     reactionStatusText_ = wxString::FromUTF8(statusText);
     if (reactionStatusText_.IsEmpty()) {
-        reactionStatusText_ = wxT("Unbekannt");
+        reactionStatusText_ = wxT("Unknown");
     }
     Refresh();
 }

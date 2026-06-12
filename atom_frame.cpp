@@ -82,13 +82,13 @@ AtomFrame::AtomFrame(const wxString& title)
   wxBoxSizer* tbSizer = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* speedGroup = new wxBoxSizer(wxHORIZONTAL);
 
-  speedLabel_ = new wxStaticText(toolbar_, wxID_ANY, wxT("Geschwindigkeit:"));
+  speedLabel_ = new wxStaticText(toolbar_, wxID_ANY, wxT("Speed:"));
   speedSlider_ = new wxSlider(toolbar_, wxID_ANY, 3, 1, 5,
       wxDefaultPosition, wxSize(150, -1));
   pauseBtn_ = new wxButton(toolbar_, wxID_ANY,
       wxT("Pause"), wxDefaultPosition, wxSize(88, -1));
   themeBtn_ = new wxButton(toolbar_, wxID_ANY,
-      wxT("Tag/Nacht"), wxDefaultPosition, wxSize(96, -1));
+      wxT("Light/Dark"), wxDefaultPosition, wxSize(96, -1));
 
   speedGroup->Add(speedLabel_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 8);
   speedGroup->Add(speedSlider_, 0, wxALIGN_CENTER_VERTICAL);
@@ -115,7 +115,7 @@ AtomFrame::AtomFrame(const wxString& title)
 
   // Selection row
   wxBoxSizer* selectionRow = new wxBoxSizer(wxHORIZONTAL);
-  selectionText_ = new wxStaticText(this, wxID_ANY, "Reaktanten:");
+  selectionText_ = new wxStaticText(this, wxID_ANY, "Reaction:");
   selectionRow->Add(selectionText_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 16);
 
   auto addReactantControls = [&](wxStaticText*& elementText,
@@ -125,10 +125,10 @@ AtomFrame::AtomFrame(const wxString& title)
                                  const wxString& defaultLabel,
                                  int rightPaddingAfterPlus) {
     elementText = new wxStaticText(this, wxID_ANY, defaultLabel);
-    minusBtn = new wxButton(this, wxID_ANY, "-", wxDefaultPosition, wxSize(40, 40));
+    minusBtn = new wxButton(this, wxID_ANY, "-", wxDefaultPosition, wxSize(36, 36));
     valueText = new wxStaticText(this, wxID_ANY, "0",
         wxDefaultPosition, wxSize(34, -1), wxALIGN_CENTRE_HORIZONTAL);
-    plusBtn = new wxButton(this, wxID_ANY, "+", wxDefaultPosition, wxSize(40, 40));
+    plusBtn = new wxButton(this, wxID_ANY, "+", wxDefaultPosition, wxSize(36, 36));
 
     selectionRow->Add(elementText, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 8);
     selectionRow->Add(minusBtn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
@@ -173,14 +173,14 @@ AtomFrame::AtomFrame(const wxString& title)
   // Events
   themeBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
     reactionController_.toggleDarkMode();
-    canvas_->setDunkelModus(uiState_.darkMode);
+    canvas_->setDarkMode(uiState_.darkMode);
     sidebar_->setDarkMode(uiState_.darkMode);
     applyTheme();
   });
 
   speedSlider_->Bind(wxEVT_SLIDER, [this](wxCommandEvent&) {
     reactionController_.setSpeed(speedSlider_->GetValue());
-    canvas_->setGeschwindigkeit(uiState_.speed);
+    canvas_->setSpeed(uiState_.speed);
   });
 
   pauseBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
@@ -211,14 +211,14 @@ AtomFrame::AtomFrame(const wxString& title)
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSafeReactionsDialog(); }, mixlab::ID_Menu_SafeReactions);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSettingsDialog(); }, mixlab::ID_Menu_Settings);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { 
-    wxMessageBox(wxT("Sprachumschaltung nicht implementiert"), wxT("Info"), wxICON_INFORMATION | wxOK);
+    wxMessageBox(wxT("Language switching is not implemented"), wxT("Info"), wxICON_INFORMATION | wxOK);
   }, mixlab::ID_Menu_Language);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSaveReactionDialog(); }, mixlab::ID_Menu_SaveReaction);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSavedReactionsDialog(); }, mixlab::ID_Menu_OpenSaved);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showExportDialog(); }, mixlab::ID_Menu_ExportText);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) {
     reactionController_.toggleDarkMode();
-    canvas_->setDunkelModus(uiState_.darkMode);
+    canvas_->setDarkMode(uiState_.darkMode);
     sidebar_->setDarkMode(uiState_.darkMode);
     applyTheme();
   }, mixlab::ID_Menu_ToggleTheme);
@@ -241,10 +241,10 @@ AtomFrame::AtomFrame(const wxString& title)
   rightSizer->Add(canvas_, 1, wxEXPAND);
 
   // Result row
-  resultFormulaText_ = new wxStaticText(this, wxID_ANY, "Formel: -");
+  resultFormulaText_ = new wxStaticText(this, wxID_ANY, "Formula: -");
   resultNameText_ = new wxStaticText(this, wxID_ANY, "Name: -");
   resultStatusText_ = new wxStaticText(this, wxID_ANY, "Status: -");
-  resultHintText_ = new wxStaticText(this, wxID_ANY, "Hinweis: -");
+  resultHintText_ = new wxStaticText(this, wxID_ANY, "Note: -");
   resultHintText_->Wrap(760);
 
   setBold(resultFormulaText_);
@@ -291,10 +291,10 @@ void AtomFrame::updateSelectionText() {
 void AtomFrame::updateReactionResult(const ReactionResult& result) {
   if (!resultFormulaText_ || !resultNameText_ || !resultStatusText_ || !resultHintText_) return;
 
-  resultFormulaText_->SetLabel("Formel: " + result.formula);
+  resultFormulaText_->SetLabel("Formula: " + result.formula);
   resultNameText_->SetLabel("Name: " + result.name);
   resultStatusText_->SetLabel("Status: " + result.statusText);
-  resultHintText_->SetLabel("Hinweis: " + result.hint);
+  resultHintText_->SetLabel("Note: " + result.hint);
 
   resultStatusText_->SetForegroundColour(getStatusColour(result.status, uiState_.darkMode));
   resultStatusText_->Refresh();

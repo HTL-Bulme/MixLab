@@ -83,108 +83,108 @@ ReactionResult calculateReaction(const ReactionInput& input) {
     if (input.count1 <= 0 || input.count2 <= 0) {
         return makeResult(
             makeInputFormula(input),
-            "Ungueltige Eingabe",
+            "Invalid input",
             ReactionStatus::Unknown,
-            "Unbekannt",
-            "Die Anzahl der Atome muss groesser als 0 sein.",
+            "Unknown",
+            "The number of atoms must be greater than 0.",
             false
         );
     }
 
-    // Wasser: 2 H + 1 O -> H2O
+    // Water: 2 H + 1 O -> H2O
     if (matches(input, "H", 2, "O", 1)) {
         return makeResult(
             "H2O",
-            "Wasser",
+            "Water",
             ReactionStatus::Safe,
-            "Ungefaehrlich",
-            "Verhaeltnis korrekt: 2 H + 1 O"
+            "Safe",
+            "Correct ratio: 2 H + 1 O"
         );
     }
 
-    // Wasserstoffperoxid: 2 H + 2 O -> H2O2
+    // Hydrogen peroxide: 2 H + 2 O -> H2O2
     if (matches(input, "H", 2, "O", 2)) {
         return makeResult(
             "H2O2",
-            "Wasserstoffperoxid",
+            "Hydrogen peroxide",
             ReactionStatus::Warning,
-            "Vorsicht",
-            "Bekannte Verbindung, aber vorsichtig behandeln."
+            "Warning",
+            "Known compound, handle with care."
         );
     }
 
-    // Kochsalz: 1 Na + 1 Cl -> NaCl
+    // Sodium chloride: 1 Na + 1 Cl -> NaCl
     if (matches(input, "Na", 1, "Cl", 1)) {
         return makeResult(
             "NaCl",
-            "Kochsalz",
+            "Sodium chloride",
             ReactionStatus::Safe,
-            "Ungefaehrlich",
-            "Verhaeltnis korrekt: 1 Na + 1 Cl"
+            "Safe",
+            "Correct ratio: 1 Na + 1 Cl"
         );
     }
 
-    // Kohlendioxid: 1 C + 2 O -> CO2
+    // Carbon dioxide: 1 C + 2 O -> CO2
     if (matches(input, "C", 1, "O", 2)) {
         return makeResult(
             "CO2",
-            "Kohlendioxid",
+            "Carbon dioxide",
             ReactionStatus::Warning,
-            "Maessig",
-            "Bekannte Verbindung: 1 C + 2 O"
+            "Moderate",
+            "Known compound: 1 C + 2 O"
         );
     }
 
-    // Kohlenmonoxid: 1 C + 1 O -> CO
+    // Carbon monoxide: 1 C + 1 O -> CO
     if (matches(input, "C", 1, "O", 1)) {
         return makeResult(
             "CO",
-            "Kohlenmonoxid",
+            "Carbon monoxide",
             ReactionStatus::Dangerous,
-            "Gefaehrlich",
-            "Bekannte gefaehrliche Verbindung."
+            "Dangerous",
+            "Known dangerous compound."
         );
     }
 
-    // Ammoniak: 1 N + 3 H -> NH3
+    // Ammonia: 1 N + 3 H -> NH3
     if (matches(input, "N", 1, "H", 3)) {
         return makeResult(
             "NH3",
-            "Ammoniak",
+            "Ammonia",
             ReactionStatus::Warning,
-            "Vorsicht",
-            "Bekannte Verbindung: 1 N + 3 H"
+            "Warning",
+            "Known compound: 1 N + 3 H"
         );
     }
 
-    // Chlorwasserstoff: 1 H + 1 Cl -> HCl
+    // Hydrogen chloride: 1 H + 1 Cl -> HCl
     if (matches(input, "H", 1, "Cl", 1)) {
         return makeResult(
             "HCl",
-            "Chlorwasserstoff",
+            "Hydrogen chloride",
             ReactionStatus::Dangerous,
-            "Gefaehrlich",
-            "Bekannte gefaehrliche Verbindung."
+            "Dangerous",
+            "Known dangerous compound."
         );
     }
 
-    // Schwefeldioxid: 1 S + 2 O -> SO2
+    // Sulfur dioxide: 1 S + 2 O -> SO2
     if (matches(input, "S", 1, "O", 2)) {
         return makeResult(
             "SO2",
-            "Schwefeldioxid",
+            "Sulfur dioxide",
             ReactionStatus::Dangerous,
-            "Gefaehrlich",
-            "Bekannte gefaehrliche Verbindung."
+            "Dangerous",
+            "Known dangerous compound."
         );
     }
 
     return makeResult(
         makeInputFormula(input),
-        "Unbekannte Verbindung",
+        "Unknown compound",
         ReactionStatus::Unknown,
-        "Unbekannt",
-        "Diese Kombination ist in der Demo-Logik noch nicht gespeichert.",
+        "Unknown",
+        "This combination is not available in the demo logic yet.",
         false
     );
 }
