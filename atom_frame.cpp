@@ -90,6 +90,8 @@ AtomFrame::AtomFrame(const wxString& title)
       localize(uiState_.language, "Pause", "Pause"), wxDefaultPosition, wxSize(88, -1));
   themeBtn_ = new wxButton(toolbar_, wxID_ANY,
       localize(uiState_.language, "Light/Dark", "Hell/Dunkel"), wxDefaultPosition, wxSize(96, -1));
+  langBtn_ = new wxButton(toolbar_, wxID_ANY,
+      localize(uiState_.language, "En/De", "En/De"), wxDefaultPosition, wxSize(64, -1));
 
   speedGroup->Add(speedLabel_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 8);
   speedGroup->Add(speedSlider_, 0, wxALIGN_CENTER_VERTICAL);
@@ -98,6 +100,7 @@ AtomFrame::AtomFrame(const wxString& title)
   tbSizer->Add(pauseBtn_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 10);
   tbSizer->AddStretchSpacer(1);
   tbSizer->Add(themeBtn_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxLEFT | wxRIGHT), 10);
+  tbSizer->Add(langBtn_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 10);
 
   toolbar_->SetSizer(tbSizer);
   mainSizer->Add(toolbar_, 0, wxEXPAND | wxGROW | wxLEFT | wxRIGHT | wxTOP, 6);
@@ -177,6 +180,13 @@ AtomFrame::AtomFrame(const wxString& title)
     canvas_->setDarkMode(uiState_.darkMode);
     sidebar_->setDarkMode(uiState_.darkMode);
     applyTheme();
+  });
+
+  langBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+    uiState_.language = (uiState_.language == Language::English)
+        ? Language::German
+        : Language::English;
+    updateLanguage();
   });
 
   speedSlider_->Bind(wxEVT_SLIDER, [this](wxCommandEvent&) {
@@ -392,6 +402,9 @@ void AtomFrame::updateLanguage() {
   }
   if (themeBtn_) {
     themeBtn_->SetLabel(localize(uiState_.language, "Light/Dark", "Hell/Dunkel"));
+  }
+  if (langBtn_) {
+    langBtn_->SetLabel(localize(uiState_.language, "En/De", "En/De"));
   }
   if (selectionText_) {
     selectionText_->SetLabel(localize(uiState_.language, "Reaction:", "Reaktion:"));
