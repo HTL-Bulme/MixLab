@@ -1,6 +1,8 @@
 #ifndef GUI_DIALOGS_HPP
 #define GUI_DIALOGS_HPP
 
+#include "ui_state.hpp"
+
 namespace mixlab {
 
 void showAboutDialog();
@@ -11,9 +13,9 @@ void showAllReactionsDialog();
 void showDangerousReactionsDialog();
 void showSafeReactionsDialog();
 void showSettingsDialog();
-void showSaveReactionDialog();
-void showSavedReactionsDialog();
-void showExportDialog();
+void showSaveReactionDialog(UiState& state);
+void showSavedReactionsDialog(const UiState& state);
+void showExportDialog(const ReactionResult& currentResult);
 
 } // namespace mixlab
 

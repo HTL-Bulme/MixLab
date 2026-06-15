@@ -211,11 +211,11 @@ AtomFrame::AtomFrame(const wxString& title)
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSafeReactionsDialog(); }, mixlab::ID_Menu_SafeReactions);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSettingsDialog(); }, mixlab::ID_Menu_Settings);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { 
-    wxMessageBox(wxT("Language switching is not implemented"), wxT("Info"), wxICON_INFORMATION | wxOK);
+    wxMessageBox(wxT("Language switching is not implemented yet."), wxT("Info"), wxICON_INFORMATION | wxOK);
   }, mixlab::ID_Menu_Language);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSaveReactionDialog(); }, mixlab::ID_Menu_SaveReaction);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSavedReactionsDialog(); }, mixlab::ID_Menu_OpenSaved);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showExportDialog(); }, mixlab::ID_Menu_ExportText);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSaveReactionDialog(uiState_); }, mixlab::ID_Menu_SaveReaction);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSavedReactionsDialog(uiState_); }, mixlab::ID_Menu_OpenSaved);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showExportDialog(uiState_.currentResult); }, mixlab::ID_Menu_ExportText);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) {
     reactionController_.toggleDarkMode();
     canvas_->setDarkMode(uiState_.darkMode);

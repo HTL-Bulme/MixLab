@@ -3,6 +3,8 @@
 
 #include "reaction.hpp"
 
+#include <vector>
+
 namespace mixlab {
 
 struct UiState {
@@ -11,6 +13,7 @@ struct UiState {
     bool darkMode = true;
     int savedCount = 0;
     ReactionResult currentResult;
+    std::vector<ReactionResult> savedReactions;
 };
 
 } // namespace mixlab
