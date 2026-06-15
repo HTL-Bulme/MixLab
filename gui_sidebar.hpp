@@ -2,6 +2,7 @@
 #define GUI_SIDEBAR_HPP
 
 #include <wx/wx.h>
+#include "language.hpp"
 #include <wx/listbox.h>
 #include <wx/stattext.h>
 #include <string>
@@ -23,6 +24,9 @@ public:
     // Switches between dark and light visual mode
     void setDarkMode(bool dark);
 
+    // Updates displayed text for the selected language
+    void setLanguage(Language language);
+
 private:
     void buildLayout();
     void onElementSelected(wxCommandEvent& event);
@@ -33,6 +37,7 @@ private:
     wxStaticText* historyLabel_;
 
     bool darkMode_ = true;
+    Language language_ = Language::English;
 
     wxDECLARE_EVENT_TABLE();
 };

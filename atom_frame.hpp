@@ -17,6 +17,7 @@ public:
 private:
     AtomCanvas* canvas_ = nullptr;
     GuiSidebar* sidebar_ = nullptr;
+    wxMenuBar* menuBar_ = nullptr;
 
     wxPanel*      toolbar_    = nullptr;
     wxButton*     themeBtn_   = nullptr;
@@ -37,6 +38,7 @@ private:
 
     wxStaticText* selectionText_ = nullptr;
     void updateSelectionText();
+    void updateLanguage();
 
     wxStaticText* resultFormulaText_ = nullptr;
     wxStaticText* resultNameText_ = nullptr;

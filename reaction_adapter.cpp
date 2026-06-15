@@ -3,6 +3,6 @@
 #include <wx/wx.h>
 namespace mixlab {
 void ReactionAdapter::onAboutClicked(wxCommandEvent& event) {
-    showAboutDialog();
+    showAboutDialog(Language::English);
 }
 } // namespace mixlab

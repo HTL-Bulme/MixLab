@@ -21,6 +21,7 @@ set(APP_SRCS
   reaction_controller.cpp
   molecule_data.cpp
   reaction.cpp
+  language.cpp
   gui_sidebar.cpp
   gui_menu.cpp
   gui_dialogs.cpp
