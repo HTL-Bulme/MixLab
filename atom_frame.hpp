@@ -21,6 +21,7 @@ private:
 
     wxPanel*      toolbar_    = nullptr;
     wxButton*     themeBtn_   = nullptr;
+    wxButton*     langBtn_    = nullptr;
     wxStaticText* speedLabel_ = nullptr;
     wxSlider* speedSlider_ = nullptr;
     wxButton* pauseBtn_ = nullptr;
