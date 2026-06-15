@@ -1,6 +1,7 @@
 #ifndef UI_STATE_HPP
 #define UI_STATE_HPP
 
+#include "language.hpp"
 #include "reaction.hpp"
 
 #include <vector>
@@ -14,6 +15,7 @@ struct UiState {
     int savedCount = 0;
     ReactionResult currentResult;
     std::vector<ReactionResult> savedReactions;
+    Language language = Language::English;
 };
 
 } // namespace mixlab

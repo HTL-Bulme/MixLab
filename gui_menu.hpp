@@ -2,6 +2,7 @@
 #define GUI_MENU_HPP
 
 #include <wx/wx.h>
+#include "language.hpp"
 
 namespace mixlab {
 
@@ -22,7 +23,7 @@ enum MenuId {
     ID_Menu_About,
 };
 
-wxMenuBar* createMenuBar();
+wxMenuBar* createMenuBar(Language language);
 
 } // namespace mixlab
 

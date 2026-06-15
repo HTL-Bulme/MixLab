@@ -3,6 +3,7 @@
 #include "gui_sidebar.hpp"
 #include "gui_menu.hpp"
 #include "gui_dialogs.hpp"
+#include "language.hpp"
 
 #include <wx/wx.h>
 #include <algorithm>
@@ -72,8 +73,8 @@ AtomFrame::AtomFrame(const wxString& title)
   SetMinSize(wxSize(800, 560));
 
   // Create and set menu bar
-  wxMenuBar* menuBar = createMenuBar();
-  SetMenuBar(menuBar);
+  menuBar_ = createMenuBar(uiState_.language);
+  SetMenuBar(menuBar_);
 
   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -82,21 +83,21 @@ AtomFrame::AtomFrame(const wxString& title)
   wxBoxSizer* tbSizer = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* speedGroup = new wxBoxSizer(wxHORIZONTAL);
 
-  speedLabel_ = new wxStaticText(toolbar_, wxID_ANY, wxT("Speed:"));
+  speedLabel_ = new wxStaticText(toolbar_, wxID_ANY, localize(uiState_.language, "Speed:", "Geschwindigkeit:"));
   speedSlider_ = new wxSlider(toolbar_, wxID_ANY, 3, 1, 5,
       wxDefaultPosition, wxSize(150, -1));
   pauseBtn_ = new wxButton(toolbar_, wxID_ANY,
-      wxT("Pause"), wxDefaultPosition, wxSize(88, -1));
+      localize(uiState_.language, "Pause", "Pause"), wxDefaultPosition, wxSize(88, -1));
   themeBtn_ = new wxButton(toolbar_, wxID_ANY,
-      wxT("Light/Dark"), wxDefaultPosition, wxSize(96, -1));
+      localize(uiState_.language, "Light/Dark", "Hell/Dunkel"), wxDefaultPosition, wxSize(96, -1));
 
-  speedGroup->Add(speedLabel_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 8);
+  speedGroup->Add(speedLabel_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 8);
   speedGroup->Add(speedSlider_, 0, wxALIGN_CENTER_VERTICAL);
 
-  tbSizer->Add(speedGroup, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 10);
-  tbSizer->Add(pauseBtn_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
+  tbSizer->Add(speedGroup, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxLEFT | wxRIGHT), 10);
+  tbSizer->Add(pauseBtn_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 10);
   tbSizer->AddStretchSpacer(1);
-  tbSizer->Add(themeBtn_, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 10);
+  tbSizer->Add(themeBtn_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxLEFT | wxRIGHT), 10);
 
   toolbar_->SetSizer(tbSizer);
   mainSizer->Add(toolbar_, 0, wxEXPAND | wxGROW | wxLEFT | wxRIGHT | wxTOP, 6);
@@ -115,8 +116,8 @@ AtomFrame::AtomFrame(const wxString& title)
 
   // Selection row
   wxBoxSizer* selectionRow = new wxBoxSizer(wxHORIZONTAL);
-  selectionText_ = new wxStaticText(this, wxID_ANY, "Reaction:");
-  selectionRow->Add(selectionText_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 16);
+  selectionText_ = new wxStaticText(this, wxID_ANY, localize(uiState_.language, "Reaction:", "Reaktion:"));
+  selectionRow->Add(selectionText_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 16);
 
   auto addReactantControls = [&](wxStaticText*& elementText,
                                  wxButton*& minusBtn,
@@ -130,20 +131,20 @@ AtomFrame::AtomFrame(const wxString& title)
         wxDefaultPosition, wxSize(34, -1), wxALIGN_CENTRE_HORIZONTAL);
     plusBtn = new wxButton(this, wxID_ANY, "+", wxDefaultPosition, wxSize(36, 36));
 
-    selectionRow->Add(elementText, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 8);
-    selectionRow->Add(minusBtn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
-    selectionRow->Add(valueText, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
-    selectionRow->Add(plusBtn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, rightPaddingAfterPlus);
+    selectionRow->Add(elementText, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 8);
+    selectionRow->Add(minusBtn, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 6);
+    selectionRow->Add(valueText, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 6);
+    selectionRow->Add(plusBtn, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), rightPaddingAfterPlus);
   };
 
   addReactantControls(element1Text_, count1MinusBtn_, count1ValueText_,
-                      count1PlusBtn_, "Element 1", 12);
+                      count1PlusBtn_, localize(uiState_.language, "Element 1", "Element 1"), 12);
 
   plusLabel_ = new wxStaticText(this, wxID_ANY, "+");
-  selectionRow->Add(plusLabel_, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 16);
+  selectionRow->Add(plusLabel_, 0, wxALIGN_CENTER_VERTICAL | static_cast<int>(wxRIGHT), 16);
 
   addReactantControls(element2Text_, count2MinusBtn_, count2ValueText_,
-                      count2PlusBtn_, "Element 2", 0);
+                      count2PlusBtn_, localize(uiState_.language, "Element 2", "Element 2"), 0);
 
   for (wxWindow* label : { selectionText_, element1Text_, element2Text_ }) {
     setBold(label, 2);
@@ -202,20 +203,23 @@ AtomFrame::AtomFrame(const wxString& title)
   count2PlusBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { adjustCount2(+1); });
 
   // Menu event handlers for dialogs and actions
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showAboutDialog(); }, mixlab::ID_Menu_About);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showHelpDialog(); }, mixlab::ID_Menu_Help);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showValenceDialog(); }, mixlab::ID_Menu_Valence);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showElementTableDialog(); }, mixlab::ID_Menu_ElementTable);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showAllReactionsDialog(); }, mixlab::ID_Menu_AllReactions);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showDangerousReactionsDialog(); }, mixlab::ID_Menu_DangerousReactions);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSafeReactionsDialog(); }, mixlab::ID_Menu_SafeReactions);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSettingsDialog(); }, mixlab::ID_Menu_Settings);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { 
-    wxMessageBox(wxT("Language switching is not implemented yet."), wxT("Info"), wxICON_INFORMATION | wxOK);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showAboutDialog(uiState_.language); }, mixlab::ID_Menu_About);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showHelpDialog(uiState_.language); }, mixlab::ID_Menu_Help);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showValenceDialog(uiState_.language); }, mixlab::ID_Menu_Valence);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showElementTableDialog(uiState_.language); }, mixlab::ID_Menu_ElementTable);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showAllReactionsDialog(uiState_.language); }, mixlab::ID_Menu_AllReactions);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showDangerousReactionsDialog(uiState_.language); }, mixlab::ID_Menu_DangerousReactions);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSafeReactionsDialog(uiState_.language); }, mixlab::ID_Menu_SafeReactions);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSettingsDialog(uiState_.language); }, mixlab::ID_Menu_Settings);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) {
+    uiState_.language = (uiState_.language == Language::English)
+        ? Language::German
+        : Language::English;
+    updateLanguage();
   }, mixlab::ID_Menu_Language);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSaveReactionDialog(uiState_); }, mixlab::ID_Menu_SaveReaction);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSavedReactionsDialog(uiState_); }, mixlab::ID_Menu_OpenSaved);
-  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showExportDialog(uiState_.currentResult); }, mixlab::ID_Menu_ExportText);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSaveReactionDialog(uiState_, uiState_.language); }, mixlab::ID_Menu_SaveReaction);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showSavedReactionsDialog(uiState_, uiState_.language); }, mixlab::ID_Menu_OpenSaved);
+  Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showExportDialog(uiState_.currentResult, uiState_.language); }, mixlab::ID_Menu_ExportText);
   Bind(wxEVT_MENU, [this](wxCommandEvent&) {
     reactionController_.toggleDarkMode();
     canvas_->setDarkMode(uiState_.darkMode);
@@ -241,10 +245,10 @@ AtomFrame::AtomFrame(const wxString& title)
   rightSizer->Add(canvas_, 1, wxEXPAND);
 
   // Result row
-  resultFormulaText_ = new wxStaticText(this, wxID_ANY, "Formula: -");
-  resultNameText_ = new wxStaticText(this, wxID_ANY, "Name: -");
-  resultStatusText_ = new wxStaticText(this, wxID_ANY, "Status: -");
-  resultHintText_ = new wxStaticText(this, wxID_ANY, "Note: -");
+  resultFormulaText_ = new wxStaticText(this, wxID_ANY, localize(uiState_.language, "Formula: -", "Formel: -"));
+  resultNameText_ = new wxStaticText(this, wxID_ANY, localize(uiState_.language, "Name: -", "Name: -"));
+  resultStatusText_ = new wxStaticText(this, wxID_ANY, localize(uiState_.language, "Status: -", "Status: -"));
+  resultHintText_ = new wxStaticText(this, wxID_ANY, localize(uiState_.language, "Note: -", "Hinweis: -"));
   resultHintText_->Wrap(760);
 
   setBold(resultFormulaText_);
@@ -271,19 +275,21 @@ void AtomFrame::toggleAnimationPause() {
 void AtomFrame::updateSelectionText() {
   if (!selectionText_) return;
 
-  auto setElementLabel = [](wxStaticText* text,
-                            const std::string& element,
-                            const wxString& fallback) {
+  auto setElementLabel = [this](wxStaticText* text,
+                                const std::string& element,
+                                const wxString& fallback) {
     if (!text) return;
 
     const wxString label = element.empty()
       ? fallback
-      : wxString::FromUTF8(getElementDisplayName(element));
+      : wxString::FromUTF8(translateElementName(getElementDisplayName(element), uiState_.language));
     text->SetLabel(label);
   };
 
-  setElementLabel(element1Text_, uiState_.input.element1, "Element 1");
-  setElementLabel(element2Text_, uiState_.input.element2, "Element 2");
+  setElementLabel(element1Text_, uiState_.input.element1,
+                  localize(uiState_.language, "Element 1", "Element 1"));
+  setElementLabel(element2Text_, uiState_.input.element2,
+                  localize(uiState_.language, "Element 2", "Element 2"));
 
   Layout();
 }
@@ -291,16 +297,16 @@ void AtomFrame::updateSelectionText() {
 void AtomFrame::updateReactionResult(const ReactionResult& result) {
   if (!resultFormulaText_ || !resultNameText_ || !resultStatusText_ || !resultHintText_) return;
 
-  resultFormulaText_->SetLabel("Formula: " + result.formula);
-  resultNameText_->SetLabel("Name: " + result.name);
-  resultStatusText_->SetLabel("Status: " + result.statusText);
-  resultHintText_->SetLabel("Note: " + result.hint);
+  resultFormulaText_->SetLabel(localize(uiState_.language, "Formula: ", "Formel: ") + wxString::FromUTF8(result.formula));
+  resultNameText_->SetLabel(localize(uiState_.language, "Name: ", "Name: ") + wxString::FromUTF8(translateCompoundName(result.name, uiState_.language)));
+  resultStatusText_->SetLabel(localize(uiState_.language, "Status: ", "Status: ") + getStatusText(result.status, uiState_.language));
+  resultHintText_->SetLabel(localize(uiState_.language, "Note: ", "Hinweis: ") + wxString::FromUTF8(translateHint(result.hint, uiState_.language)));
 
   resultStatusText_->SetForegroundColour(getStatusColour(result.status, uiState_.darkMode));
   resultStatusText_->Refresh();
 
   if (canvas_) {
-    canvas_->setReactionStatus(result.status, result.statusText);
+    canvas_->setReactionStatus(result.status, getStatusText(result.status, uiState_.language).ToStdString());
   }
 
   Layout();
@@ -367,6 +373,55 @@ void AtomFrame::updateCountTexts() {
   if (count2ValueText_) {
     count2ValueText_->SetLabel(wxString::Format("%d", uiState_.input.count2));
   }
+}
+
+void AtomFrame::updateLanguage() {
+  if (menuBar_) {
+    SetMenuBar(nullptr);
+    delete menuBar_;
+    menuBar_ = nullptr;
+  }
+  menuBar_ = createMenuBar(uiState_.language);
+  SetMenuBar(menuBar_);
+
+  if (speedLabel_) {
+    speedLabel_->SetLabel(localize(uiState_.language, "Speed:", "Geschwindigkeit:"));
+  }
+  if (pauseBtn_) {
+    pauseBtn_->SetLabel(localize(uiState_.language, "Pause", "Pause"));
+  }
+  if (themeBtn_) {
+    themeBtn_->SetLabel(localize(uiState_.language, "Light/Dark", "Hell/Dunkel"));
+  }
+  if (selectionText_) {
+    selectionText_->SetLabel(localize(uiState_.language, "Reaction:", "Reaktion:"));
+  }
+  if (element1Text_) {
+    element1Text_->SetLabel(localize(uiState_.language, "Element 1", "Element 1"));
+  }
+  if (element2Text_) {
+    element2Text_->SetLabel(localize(uiState_.language, "Element 2", "Element 2"));
+  }
+  if (resultFormulaText_) {
+    resultFormulaText_->SetLabel(localize(uiState_.language, "Formula: -", "Formel: -"));
+  }
+  if (resultNameText_) {
+    resultNameText_->SetLabel(localize(uiState_.language, "Name: -", "Name: -"));
+  }
+  if (resultStatusText_) {
+    resultStatusText_->SetLabel(localize(uiState_.language, "Status: -", "Status: -"));
+  }
+  if (resultHintText_) {
+    resultHintText_->SetLabel(localize(uiState_.language, "Note: -", "Hinweis: -"));
+  }
+
+  if (sidebar_) {
+    sidebar_->setLanguage(uiState_.language);
+  }
+
+  updateSelectionText();
+  const ReactionResult& result = reactionController_.recompute();
+  updateReactionResult(result);
 }
 
 void AtomFrame::applyTheme() {
