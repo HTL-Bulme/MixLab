@@ -8,9 +8,9 @@ wxMenuBar* createMenuBar() {
 
     wxMenu* fileMenu = new wxMenu;
     fileMenu->Append(ID_Menu_SaveReaction, "Save Reaction\tCtrl+S");
-    fileMenu->Append(ID_Menu_OpenSaved, "Open Saved");
+    fileMenu->Append(ID_Menu_OpenSaved, "Saved Reactions...");
     fileMenu->AppendSeparator();
-    fileMenu->Append(ID_Menu_ExportText, "Export as TXT");
+    fileMenu->Append(ID_Menu_ExportText, "Export Reaction as TXT");
     fileMenu->AppendSeparator();
     fileMenu->Append(ID_Menu_Reset, "Reset All");
     menuBar->Append(fileMenu, "File");
