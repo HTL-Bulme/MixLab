@@ -1,4 +1,5 @@
 #include "atom_canvas.hpp"
+#include "molecule_data.hpp"
 #include <wx/dcbuffer.h>
 #include <algorithm>
 #include <cmath>
@@ -18,6 +19,46 @@ struct StatusStyle {
     wxColour core;
     wxColour label;
 };
+
+struct AtomStyle {
+    wxColour background;
+    wxColour text;
+};
+
+wxColour colourFromHex(const std::string& hex, const wxColour& fallback) {
+    if (hex.size() != 7 || hex[0] != '#') {
+        return fallback;
+    }
+
+    try {
+        const int r = std::stoi(hex.substr(1, 2), nullptr, 16);
+        const int g = std::stoi(hex.substr(3, 2), nullptr, 16);
+        const int b = std::stoi(hex.substr(5, 2), nullptr, 16);
+
+        return wxColour(
+            static_cast<unsigned char>(r),
+            static_cast<unsigned char>(g),
+            static_cast<unsigned char>(b)
+        );
+    } catch (...) {
+        return fallback;
+    }
+}
+
+AtomStyle styleForElement(const wxString& symbol,
+                          const wxColour& fallbackAtom,
+                          const wxColour& fallbackText) {
+    const auto element = mixlab::findElementInfo(symbol.ToStdString());
+
+    if (!element) {
+        return { fallbackAtom, fallbackText };
+    }
+
+    return {
+        colourFromHex(element->background, fallbackAtom),
+        colourFromHex(element->textColor, fallbackText)
+    };
+}
 
 StatusStyle styleForStatus(mixlab::ReactionStatus status, bool darkMode) {
     switch (status) {
@@ -147,10 +188,25 @@ void AtomCanvas::OnPaint(wxPaintEvent&) {
 
     if (!reactionPhase_) {
         const float yLevel = hf * 0.5f;
+
+        const AtomStyle style1 = styleForElement(
+            symbol1_,
+            wxColour(181, 212, 244),
+            wxColour(12, 68, 124)
+        );
+
+        const AtomStyle style2 = styleForElement(
+            symbol2_,
+            wxColour(159, 225, 203),
+            wxColour(8, 80, 65)
+        );
+
         drawAtoms(symbol1_, count1_, yLevel, leftBase,
-                  wxColour(181, 212, 244), wxColour(12, 68, 124), -1);
+                style1.background, style1.text, -1);
+
         drawAtoms(symbol2_, count2_, yLevel, rightBase,
-                  wxColour(159, 225, 203), wxColour(8, 80, 65), 1);
+                style2.background, style2.text, 1);
+
         return;
     }
 

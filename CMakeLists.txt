@@ -37,5 +37,12 @@ add_executable(test_atom_mixer
   tests/test_atom_mixer.cpp
   reaction.cpp
 )
-target_include_directories(test_atom_mixer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(test_atom_mixer PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${wxWidgets_INCLUDE_DIRS}
+)
+
+target_link_libraries(test_atom_mixer PRIVATE ${wxWidgets_LIBRARIES})
+target_compile_definitions(test_atom_mixer PRIVATE ${wxWidgets_DEFINITIONS})
+
 add_test(NAME test_atom_mixer COMMAND test_atom_mixer)
