@@ -18,7 +18,7 @@ static wxString makeMessageText(const std::vector<std::string>& lines) {
 void showAboutDialog(Language language) {
     wxString text = localize(language, "Atom Mixer v1.0\n", "Atom Mixer v1.0\n");
     text += localize(language, "School project — C++ / wxWidgets\n\n", "Schulprojekt — C++ / wxWidgets\n\n");
-    text += localize(language, "Authors: [Name 1], [Name 2]\n", "Autoren: [Name 1], [Name 2]\n");
+    text += localize(language, "Authors: Nataliia, Anh\n", "Autoren: Nataliia, Anh\n");
     text += localize(language, "License: MIT\n\n", "Lizenz: MIT\n\n");
     text += wxString::Format(localize(language, "Known reactions in database: %zu\n", "Bekannte Reaktionen in der Datenbank: %zu\n"), getMoleculeDatabase().size());
     text += wxString::Format(localize(language, "Elements: %zu", "Elemente: %zu"), getElementData().size());

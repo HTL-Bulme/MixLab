@@ -29,6 +29,7 @@ GuiSidebar::GuiSidebar(wxWindow* parent)
     : wxPanel(parent, wxID_ANY) {
     buildLayout();
     setLanguage(language_);
+    setDarkMode(darkMode_);
 }
 
 void GuiSidebar::buildLayout() {

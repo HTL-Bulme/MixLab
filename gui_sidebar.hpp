@@ -6,7 +6,6 @@
 #include <wx/listbox.h>
 #include <wx/stattext.h>
 #include <string>
-#include <vector>
 
 namespace mixlab {
 
