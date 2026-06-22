@@ -1,5 +1,4 @@
 #include "reaction.hpp"
-#include "reaction_adapter.hpp"
 
 #include <string>
 #include <utility>

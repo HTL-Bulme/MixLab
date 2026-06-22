@@ -33,16 +33,27 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${wxWidgets_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${wxWidgets_LIBRARIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${wxWidgets_DEFINITIONS})
 
-add_executable(test_atom_mixer
-  tests/test_atom_mixer.cpp
-  reaction.cpp
+add_executable(test_logic
+    tests/test_logic.cpp
+    reaction.cpp
+    reaction_history.cpp
 )
+
+add_executable(test_atom_mixer
+    tests/test_atom_mixer.cpp
+    reaction.cpp
+)
+
 target_include_directories(test_atom_mixer PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${wxWidgets_INCLUDE_DIRS}
+)
+target_include_directories(test_logic PRIVATE
+    ${CMAKE_SOURCE_DIR}
 )
 
 target_link_libraries(test_atom_mixer PRIVATE ${wxWidgets_LIBRARIES})
 target_compile_definitions(test_atom_mixer PRIVATE ${wxWidgets_DEFINITIONS})
 
 add_test(NAME test_atom_mixer COMMAND test_atom_mixer)
+add_test(NAME test_logic COMMAND test_logic)
