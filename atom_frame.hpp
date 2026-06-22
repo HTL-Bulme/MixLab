@@ -31,6 +31,7 @@ private:
     wxButton* count2MinusBtn_ = nullptr;
     wxStaticText* count2ValueText_ = nullptr;
     wxButton* count2PlusBtn_ = nullptr;
+    wxButton* mixBtn_ = nullptr;
     wxStaticText* element1Text_ = nullptr;
     wxStaticText* element2Text_ = nullptr;
     wxStaticText* plusLabel_    = nullptr;
@@ -50,6 +51,7 @@ private:
     void toggleAnimationPause();
     void adjustCount1(int delta);
     void adjustCount2(int delta);
+    void onMixClicked();
     void updateCountTexts();
 
     bool hasFirstSelection_ = false;

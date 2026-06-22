@@ -7,6 +7,10 @@ ReactionHistory::ReactionHistory(size_t maxSize)
 }
 
 void ReactionHistory::addReaction(const std::string& reaction) {
+    if (!reactions_.empty() &&
+        reactions_.back() == reaction) {
+        return;
+    }
     reactions_.push_back(reaction);
     if (reactions_.size() > maxSize_) {
         reactions_.erase(reactions_.begin());

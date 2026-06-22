@@ -149,6 +149,10 @@ AtomFrame::AtomFrame(const wxString& title)
   addReactantControls(element2Text_, count2MinusBtn_, count2ValueText_,
                       count2PlusBtn_, localize(uiState_.language, "Element 2", "Element 2"), 0);
 
+  
+  mixBtn_ = new wxButton(this, wxID_ANY, "Mix");
+  selectionRow->Add(mixBtn_, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 20);
+
   for (wxWindow* label : { selectionText_, element1Text_, element2Text_ }) {
     setBold(label, 2);
   }
@@ -211,6 +215,7 @@ AtomFrame::AtomFrame(const wxString& title)
   count1PlusBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { adjustCount1(+1); });
   count2MinusBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { adjustCount2(-1); });
   count2PlusBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { adjustCount2(+1); });
+  mixBtn_->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { onMixClicked(); });
 
   // Menu event handlers for dialogs and actions
   Bind(wxEVT_MENU, [this](wxCommandEvent&) { mixlab::showAboutDialog(uiState_.language); }, mixlab::ID_Menu_About);
@@ -348,7 +353,7 @@ void AtomFrame::applySidebarSelection() {
 
   const ReactionResult& result = reactionController_.recompute();
   updateReactionResult(result);
-  sidebar_->addHistoryEntry(result.formula, result.name);
+//  sidebar_->addHistoryEntry(result.formula, result.name); // Only add to history when user clicks "Mix" button
 }
 
 void AtomFrame::applyAtomCounts() {
@@ -374,6 +379,21 @@ void AtomFrame::adjustCount2(int delta) {
   if (next == uiState_.input.count2) return;
   reactionController_.setCount2(next);
   applyAtomCounts();
+}
+
+void AtomFrame::onMixClicked() {
+
+    const ReactionResult& result = reactionController_.recompute();
+    
+    updateReactionResult(result);
+    updateCanvasAtoms(canvas_, uiState_);
+
+    if (hasFirstSelection_ &&
+        hasSecondSelection_ &&
+        result.formula != "-" &&
+        !result.formula.empty()) {
+        sidebar_->addHistoryEntry(result.formula, result.name);
+    }
 }
 
 void AtomFrame::updateCountTexts() {
